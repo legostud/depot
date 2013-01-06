@@ -1,7 +1,17 @@
+#---
+# Excerpted from "Agile Web Development with Rails",
+# published by The Pragmatic Bookshelf.
+# Copyrights apply to this code. It may not be used to create training material, 
+# courses, books, articles, and the like. Contact us if you are in doubt.
+# We make no guarantees that this code is fit for any purpose. 
+# Visit http://www.pragmaticprogrammer.com/titles/rails4 for more book information.
+#---
 class Product < ActiveRecord::Base
   has_many :line_items
 
   before_destroy :ensure_not_referenced_by_any_line_item
+
+  #...
 
   attr_accessible :description, :image_url, :price, :title
   validates :title, :description, :image_url, presence: true
@@ -12,9 +22,11 @@ class Product < ActiveRecord::Base
     with:    %r{\.(gif|jpg|png)\Z}i,
     message: 'must be a URL for GIF, JPG or PNG image.'
   }
+  validates :title, length: {minimum: 10}
 
   private
-    #ensure that there are no line items referencing this product
+
+    # ensure that there are no line items referencing this product
     def ensure_not_referenced_by_any_line_item
       if line_items.empty?
         return true
@@ -23,5 +35,4 @@ class Product < ActiveRecord::Base
         return false
       end
     end
-
 end
